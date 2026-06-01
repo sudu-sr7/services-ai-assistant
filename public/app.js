@@ -1,6 +1,11 @@
-const dropdown =
+const serviceSearch =
   document.getElementById(
-    'serviceDropdown'
+    'serviceSearch'
+  );
+
+const suggestions =
+  document.getElementById(
+    'suggestions'
   );
 
 const messageInput =
@@ -13,11 +18,20 @@ const responseDiv =
     'response'
   );
 
-// Render Backend URL
+const askBtn =
+  document.getElementById(
+    'askBtn'
+  );
+
 const API_URL =
   'https://services-ai-assistant.onrender.com';
 
-// Load services into dropdown
+let allServices = [];
+
+let selectedService = null;
+
+/* LOAD SERVICES */
+
 async function loadServices() {
 
   try {
@@ -27,27 +41,8 @@ async function loadServices() {
         `${API_URL}/services`
       );
 
-    const services =
+    allServices =
       await response.json();
-
-    dropdown.innerHTML =
-      '<option value="">Select a Government Service</option>';
-
-    services.forEach(service => {
-
-      const option =
-        document.createElement(
-          'option'
-        );
-
-      option.value =
-        service.Service;
-
-      option.textContent =
-        `${service.Service} (${service.Category})`;
-
-      dropdown.appendChild(option);
-    });
 
   } catch (error) {
 
@@ -56,44 +51,113 @@ async function loadServices() {
       error
     );
 
-    dropdown.innerHTML =
-      '<option>Error Loading Services</option>';
+    serviceSearch.placeholder =
+      'Error Loading Services';
   }
 }
 
-// Autofill textarea when service selected
-const askBtn =
-  document.getElementById(
-    'askBtn'
-  );
+/* SEARCH */
 
-dropdown.addEventListener(
-  'change',
+serviceSearch.addEventListener(
+  'input',
   () => {
 
-    const selected =
-      dropdown.value;
+    const query =
+      serviceSearch.value
+        .toLowerCase()
+        .trim();
 
-    if (selected) {
+    suggestions.innerHTML = '';
 
-      messageInput.value =
-        `How to apply for ${selected}?`;
+    if (!query) {
 
-      askBtn.disabled =
-        false;
-
-    } else {
-
-      messageInput.value =
-        '';
+      suggestions.style.display =
+        'none';
 
       askBtn.disabled =
         true;
+
+      return;
+    }
+
+    const matches =
+      allServices
+        .filter(service =>
+          service.Service
+            .toLowerCase()
+            .includes(query)
+        )
+        .slice(0, 20);
+
+    matches.forEach(service => {
+
+      const item =
+        document.createElement(
+          'div'
+        );
+
+      item.className =
+        'suggestion-item';
+
+      item.textContent =
+        `${service.Service} (${service.Category})`;
+
+      item.addEventListener(
+        'click',
+        () => {
+
+          selectedService =
+            service;
+
+          serviceSearch.value =
+            service.Service;
+
+          suggestions.style.display =
+            'none';
+
+          messageInput.value =
+            `How to apply for ${service.Service}?`;
+
+          askBtn.disabled =
+            false;
+        }
+      );
+
+      suggestions.appendChild(
+        item
+      );
+    });
+
+    suggestions.style.display =
+      matches.length
+        ? 'block'
+        : 'none';
+  }
+);
+
+/* CLOSE DROPDOWN */
+
+document.addEventListener(
+  'click',
+  event => {
+
+    if (
+      !serviceSearch.contains(
+        event.target
+      ) &&
+      !suggestions.contains(
+        event.target
+      )
+    ) {
+
+      suggestions.style.display =
+        'none';
     }
   }
 );
 
-// Send question
+/* SEND MESSAGE */
+
 async function sendMessage() {
 
   const message =
@@ -153,5 +217,4 @@ async function sendMessage() {
   }
 }
 
-// Load services when page opens
 loadServices();

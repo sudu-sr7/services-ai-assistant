@@ -29,13 +29,21 @@
       Services AI Assistant
     </h1>
 
-    <select id="serviceDropdown">
+    <div class="autocomplete-container">
 
-      <option value="">
-        Select a Government Service
-      </option>
+      <input
+        type="text"
+        id="serviceSearch"
+        placeholder="Search Government Service..."
+        autocomplete="off"
+      >
 
-    </select>
+      <div
+        id="suggestions"
+        class="suggestions"
+      ></div>
+
+    </div>
 
     <textarea
       id="message"
