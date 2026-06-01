@@ -122,43 +122,102 @@ function showSuggestions(
     'block';
 }
 
-/* Typing Search */
+/* Filter Services */
+
+function filterServices() {
+
+  const query =
+    serviceSearch.value
+      .toLowerCase();
+
+  const filtered =
+    allServices.filter(
+      service =>
+        service.Service
+          .toLowerCase()
+          .includes(query)
+    );
+
+  showSuggestions(
+    filtered.slice(0, 100)
+  );
+}
+
+/* Search while typing */
 
 serviceSearch.addEventListener(
   'input',
+  filterServices
+);
+
+/* Open dropdown when textbox clicked */
+
+serviceSearch.addEventListener(
+  'click',
   () => {
 
-    const query =
-      serviceSearch.value
-        .toLowerCase();
+    if (
+      serviceSearch.value.trim()
+      === ''
+    ) {
 
-    const filtered =
-      allServices.filter(
-        service =>
-          service.Service
-            .toLowerCase()
-            .includes(query)
+      showSuggestions(
+        allServices
       );
 
-    showSuggestions(
-      filtered.slice(0, 50)
-    );
+    } else {
+
+      filterServices();
+    }
   }
 );
 
-/* Arrow Click */
+/* Open dropdown when textbox focused */
+
+serviceSearch.addEventListener(
+  'focus',
+  () => {
+
+    if (
+      serviceSearch.value.trim()
+      === ''
+    ) {
+
+      showSuggestions(
+        allServices
+      );
+
+    } else {
+
+      filterServices();
+    }
+  }
+);
+
+/* Open dropdown when arrow clicked */
 
 dropdownIcon.addEventListener(
   'click',
   () => {
 
-    showSuggestions(
-      allServices
-    );
+    if (
+      suggestions.style.display
+      === 'block'
+    ) {
+
+      suggestions.style.display =
+        'none';
+
+    } else {
+
+      showSuggestions(
+        allServices
+      );
+    }
   }
 );
 
-/* Close Dropdown */
+/* Close dropdown when clicked outside */
 
 document.addEventListener(
   'click',
@@ -176,7 +235,7 @@ document.addEventListener(
   }
 );
 
-/* Ask */
+/* Send Message */
 
 async function sendMessage() {
 
