@@ -39,9 +39,9 @@ h1 {
   color: #1e293b;
 }
 
-/* SEARCH BOX */
+/* Searchable Dropdown */
 
-.autocomplete-container {
+.combo-box {
 
   position: relative;
 
@@ -56,16 +56,33 @@ h1 {
 
   padding: 14px;
 
-  border-radius: 10px;
+  padding-right: 40px;
 
   border: 1px solid #ccc;
+
+  border-radius: 10px;
 
   font-size: 16px;
 
   box-sizing: border-box;
 }
 
-/* SUGGESTIONS BELOW SEARCH */
+.dropdown-icon {
+
+  position: absolute;
+
+  right: 15px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  cursor: pointer;
+
+  user-select: none;
+
+  color: #555;
+}
 
 .suggestions {
 
@@ -83,23 +100,23 @@ h1 {
 
   border-top: none;
 
-  max-height: 350px;
+  border-radius:
+    0 0 10px 10px;
+
+  max-height: 300px;
 
   overflow-y: auto;
 
-  z-index: 999;
-
   display: none;
 
-  border-radius:
-    0 0 10px 10px;
+  z-index: 999;
 
   box-shadow:
     0 4px 12px rgba(
       0,
       0,
       0,
-      0.08
+      0.1
     );
 }
 
@@ -109,13 +126,16 @@ h1 {
 
   cursor: pointer;
 
-  border-bottom: 1px solid #eee;
+  border-bottom:
+    1px solid #f1f1f1;
 }
 
 .suggestion-item:hover {
 
   background: #f3f4f6;
 }
+
+/* Text Area */
 
 textarea {
 
@@ -144,6 +164,8 @@ textarea:read-only {
 
   cursor: default;
 }
+
+/* Button */
 
 button {
 
@@ -180,6 +202,8 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* Response */
+
 #response {
 
   margin-top: 30px;
@@ -194,18 +218,6 @@ button:disabled {
   border-radius: 12px;
 
   line-height: 1.7;
-}
-
-.thinking {
-
-  color: #666;
-
-  font-style: italic;
-}
-
-.error {
-
-  color: red;
 }
 
 .ai-message h1,
@@ -225,4 +237,16 @@ button:disabled {
 .ai-message a:hover {
 
   text-decoration: underline;
+}
+
+.thinking {
+
+  color: #666;
+
+  font-style: italic;
+}
+
+.error {
+
+  color: red;
 }

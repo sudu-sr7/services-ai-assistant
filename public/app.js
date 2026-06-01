@@ -8,6 +8,16 @@ const suggestions =
     'suggestions'
   );
 
+const dropdownIcon =
+  document.getElementById(
+    'dropdownIcon'
+  );
+
+const askBtn =
+  document.getElementById(
+    'askBtn'
+  );
+
 const messageInput =
   document.getElementById(
     'message'
@@ -18,11 +28,6 @@ const responseDiv =
     'response'
   );
 
-const askBtn =
-  document.getElementById(
-    'askBtn'
-  );
-
 const API_URL =
   'https://services-ai-assistant.onrender.com';
 
@@ -30,7 +35,7 @@ let allServices = [];
 
 let selectedService = null;
 
-/* LOAD SERVICES */
+/* Load Services */
 
 async function loadServices() {
 
@@ -56,7 +61,68 @@ async function loadServices() {
   }
 }
 
-/* SEARCH */
+/* Show Suggestions */
+
+function showSuggestions(
+  services
+) {
+
+  suggestions.innerHTML = '';
+
+  if (
+    services.length === 0
+  ) {
+
+    suggestions.style.display =
+      'none';
+
+    return;
+  }
+
+  services.forEach(service => {
+
+    const item =
+      document.createElement(
+        'div'
+      );
+
+    item.className =
+      'suggestion-item';
+
+    item.textContent =
+      `${service.Service} (${service.Category})`;
+
+    item.addEventListener(
+      'click',
+      () => {
+
+        selectedService =
+          service.Service;
+
+        serviceSearch.value =
+          service.Service;
+
+        messageInput.value =
+          `How to apply for ${service.Service}?`;
+
+        askBtn.disabled =
+          false;
+
+        suggestions.style.display =
+          'none';
+      }
+    );
+
+    suggestions.appendChild(
+      item
+    );
+  });
+
+  suggestions.style.display =
+    'block';
+}
+
+/* Typing Search */
 
 serviceSearch.addEventListener(
   'input',
@@ -64,89 +130,43 @@ serviceSearch.addEventListener(
 
     const query =
       serviceSearch.value
-        .toLowerCase()
-        .trim();
+        .toLowerCase();
 
-    suggestions.innerHTML = '';
-
-    if (!query) {
-
-      suggestions.style.display =
-        'none';
-
-      askBtn.disabled =
-        true;
-
-      return;
-    }
-
-    const matches =
-      allServices
-        .filter(service =>
+    const filtered =
+      allServices.filter(
+        service =>
           service.Service
             .toLowerCase()
             .includes(query)
-        )
-        .slice(0, 20);
-
-    matches.forEach(service => {
-
-      const item =
-        document.createElement(
-          'div'
-        );
-
-      item.className =
-        'suggestion-item';
-
-      item.textContent =
-        `${service.Service} (${service.Category})`;
-
-      item.addEventListener(
-        'click',
-        () => {
-
-          selectedService =
-            service;
-
-          serviceSearch.value =
-            service.Service;
-
-          suggestions.style.display =
-            'none';
-
-          messageInput.value =
-            `How to apply for ${service.Service}?`;
-
-          askBtn.disabled =
-            false;
-        }
       );
 
-      suggestions.appendChild(
-        item
-      );
-    });
-
-    suggestions.style.display =
-      matches.length
-        ? 'block'
-        : 'none';
+    showSuggestions(
+      filtered.slice(0, 50)
+    );
   }
 );
 
-/* CLOSE DROPDOWN */
+/* Arrow Click */
+
+dropdownIcon.addEventListener(
+  'click',
+  () => {
+
+    showSuggestions(
+      allServices
+    );
+  }
+);
+
+/* Close Dropdown */
 
 document.addEventListener(
   'click',
-  event => {
+  e => {
 
     if (
-      !serviceSearch.contains(
-        event.target
-      ) &&
-      !suggestions.contains(
-        event.target
+      !e.target.closest(
+        '.combo-box'
       )
     ) {
 
@@ -156,7 +176,7 @@ document.addEventListener(
   }
 );
 
-/* SEND MESSAGE */
+/* Ask */
 
 async function sendMessage() {
 
