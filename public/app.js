@@ -131,7 +131,7 @@ function filterServices() {
       .toLowerCase()
       .trim();
 
-  /* Show all services when empty */
+  /* Empty search */
 
   if (query.length === 0) {
 
@@ -142,15 +142,18 @@ function filterServices() {
     return;
   }
 
-  /* Start filtering only after 3 characters */
+  /* Don't filter until 3 chars */
 
   if (query.length < 3) {
 
-    suggestions.style.display =
-      'none';
+    showSuggestions(
+      allServices
+    );
 
     return;
   }
+
+  /* Filter after 3 chars */
 
   const filtered =
     allServices.filter(
