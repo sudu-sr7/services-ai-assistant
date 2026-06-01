@@ -128,7 +128,29 @@ function filterServices() {
 
   const query =
     serviceSearch.value
-      .toLowerCase();
+      .toLowerCase()
+      .trim();
+
+  /* Show all services when empty */
+
+  if (query.length === 0) {
+
+    showSuggestions(
+      allServices
+    );
+
+    return;
+  }
+
+  /* Start filtering only after 3 characters */
+
+  if (query.length < 3) {
+
+    suggestions.style.display =
+      'none';
+
+    return;
+  }
 
   const filtered =
     allServices.filter(
@@ -157,43 +179,30 @@ serviceSearch.addEventListener(
   () => {
 
     if (
-      serviceSearch.value.trim()
-      === ''
+      serviceSearch.value.trim() === ''
     ) {
 
       showSuggestions(
         allServices
       );
-
-    } else {
-
-      filterServices();
     }
   }
 );
-
-/* Open dropdown when textbox focused */
 
 serviceSearch.addEventListener(
   'focus',
   () => {
 
     if (
-      serviceSearch.value.trim()
-      === ''
+      serviceSearch.value.trim() === ''
     ) {
 
       showSuggestions(
         allServices
       );
-
-    } else {
-
-      filterServices();
     }
   }
 );
-
 /* Open dropdown when arrow clicked */
 
 dropdownIcon.addEventListener(
